@@ -9,6 +9,8 @@ on:
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  AF_MKDOCS_COMMAND: build
 jobs:
   assetfetch-website:
     # The type of runner that the job will run on
@@ -20,7 +22,7 @@ jobs:
         - uses: actions/checkout@v2
 
         - name: Build using Docker
-          run: mkdir ${PWD}/docs/site && AF_MKDOCS_COMMAND=build docker compose up
+          run: mkdir ${PWD}/docs/site && docker compose up
 
         # Runs a single command using the runners shell
         - name: FTP Deploy
