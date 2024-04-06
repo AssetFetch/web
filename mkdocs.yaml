@@ -1,5 +1,6 @@
 site_name: AssetFetch
 markdown_extensions:
+  - def_list
   - tables
   - attr_list
   - md_in_html
@@ -13,6 +14,17 @@ markdown_extensions:
   - toc:
       permalink: true
       toc_depth: 3
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+
+
+
 repo_url: https://github.com/AssetFetch/web
 repo_name: AssetFetch/web
 theme:
@@ -30,7 +42,7 @@ nav:
   - "Start": index.md
   - "How It Works": "how-it-works.md"
   #- "For Artists": for-artists.md
-  #- "For Vendors": for-vendors.md
+  - "For Providers": for-providers.md
   #- "For Client Developers": for-client-devs.md
   - "Specification": 
     - "Latest Draft": latest-draft.md
