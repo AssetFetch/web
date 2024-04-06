@@ -23,3 +23,6 @@ This way, **artists** can use a single AssetFetch-Plugin per application to brow
 
 	**Spec Updates:**
 	Read the [latest draft version](./latest-draft.md) and [check the open issues on GitHub](https://github.com/AssetFetch/spec/blob/main/spec.md) to see the latest changes and updates
+<p style="text-align:center">
+	<a href="https://ambientcg.com/legal">Imprint</a>
+</p>
