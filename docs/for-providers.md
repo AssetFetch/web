@@ -112,3 +112,76 @@ Parameters also don't need to be plain text fields, checkboxes and simple drop-d
 The logical next step is to actually list assets.
 
 ## Listing assets
+
+The next endpoint that every provider needs is one for listing the assets that it can provide.
+This is the endpoint that the `asset_list_query` from the initialization step points to.
+
+Let's look at one possible response:
+
+```json
+{
+	"meta": {
+		"kind": "asset_list",
+		"message": "OK",
+		"version": "0.2"
+	},
+	"data": {
+		"response_statistics":{
+			"result_count_total":1
+		}
+	},
+	"assets": [
+		{
+			"id": "green_apple_001",
+			"data": {
+				"implementation_list_query": {
+					"uri": "https://api.example.com/af/0.2/implementation_list/green_apple_001",
+					"method": "get",
+					"parameters": [
+						{
+							"type": "select",
+							"id": "texture_resolution",
+							"title": "Texture Resolution",
+							"default": "1024",
+							"mandatory": true,
+							"choices": [
+								{
+									"title":"1K",
+									"value":"1024"
+								},
+								{
+									"title":"2K",
+									"value":"2048"
+								},
+								{
+									"title":"4K",
+									"value":"4096"
+								}
+							]
+						}
+					]
+				},
+				"preview_image_thumbnail": {
+					"uris": {
+						"256": "https://cdn.example.com/thumbnails/green_apple_001/256.png",
+						"512": "https://cdn.example.com/thumbnails/green_apple_001/512.png",
+						"1024": "https://cdn.example.com/thumbnails/green_apple_001/1024.png"
+					},
+					"alt": "A green apple."
+				},
+				"text": {
+					"title": "Green Apple 001",
+					"description": "Photogrammetry model of a fresh green apple."
+				}
+			}
+		}
+	]
+}
+```
+
+Again, there is the `meta` field and a `data` field for the asset list itself, containing only one datablock with some statistics (this only becomes interesting once you have so many assets that you can't list them in one query and have to use pagination using the `next_query` datablock).
+
+All the truly interesting data is in the `assets` array, which in this case has only a single asset in it, but the specification allows up to 100 per query (with pagination if there are more results).
+
+An asset consists of just an `id` and a collection of datablocks.
+The most important datablock is the `implementation_list_query` which is another variable query, but this one is specifically to get the implementations of THIS asset.
