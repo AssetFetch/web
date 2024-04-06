@@ -9,7 +9,7 @@ markdown_extensions:
       custom_fences:
         - name: mermaid
           class: mermaid
-          format: "!!python/name:pymdownx.superfences.fence_code_format"
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - toc:
       permalink: true
       toc_depth: 3
@@ -34,6 +34,7 @@ nav:
   #- "For Client Developers": for-client-devs.md
   - "Specification": 
     - "Latest Draft": latest-draft.md
+    - "v0.2": spec-0.2.md
     - "v0.1": spec-0.1.md
 extra_css:
   - stylesheets/theme.css
