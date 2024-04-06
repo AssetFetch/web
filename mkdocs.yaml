@@ -1,0 +1,39 @@
+site_name: AssetFetch
+markdown_extensions:
+  - tables
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: "!!python/name:pymdownx.superfences.fence_code_format"
+  - toc:
+      permalink: true
+      toc_depth: 3
+repo_url: https://github.com/AssetFetch/web
+repo_name: AssetFetch/web
+theme:
+  name: material
+  palette:
+    scheme: assetfetch
+  logo: media/icon_cube.svg
+  favicon: media/icon_cube.svg
+  features:
+    - toc.follow
+    - navigation.footer
+  icon:
+    repo: fontawesome/brands/github
+nav:
+  - "Start": index.md
+  - "How It Works": "how-it-works.md"
+  #- "For Artists": for-artists.md
+  #- "For Vendors": for-vendors.md
+  #- "For Client Developers": for-client-devs.md
+  - "Specification": 
+    - "Latest Draft": latest-draft.md
+    - "v0.1": spec-0.1.md
+extra_css:
+  - stylesheets/theme.css

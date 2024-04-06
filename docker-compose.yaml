@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  download-spec:
+    image: alpine/git
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        # Remove old directories
+        rm -rf /tmp/* && \
+
+        # Download spec
+        echo "0.1" | \
+        xargs -I {} sh -c 'mkdir -p /tmp/{} && git -C "/tmp/{}/" clone --depth 1 --branch {} "https://github.com/AssetFetch/spec.git" && mv "/tmp/{}/spec/spec.md" "/docs/docs/spec-{}.md"'
+
+    volumes:
+      - ./:/docs
+  mkdocs:
+    depends_on:
+      - download-spec
+    image: squidfunk/mkdocs-material:9.5.17
+    command: ${AF_MKDOCS_COMMAN} # For normal development this variable can simply be empty, but during deployment this gets set to "build"
+    volumes:
+      - ./:/docs
+    working_dir: /docs
+    ports:
+      - 8000:8000
