@@ -20,7 +20,7 @@ services:
     depends_on:
       - download-spec
     image: squidfunk/mkdocs-material:9.5.17
-    command: ${AF_MKDOCS_COMMAN} # For normal development this variable can simply be empty, but during deployment this gets set to "build"
+    command: ${AF_MKDOCS_COMMAND} # For normal development this variable can simply be empty, but during deployment this gets set to "build"
     volumes:
       - ./:/docs
     working_dir: /docs
