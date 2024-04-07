@@ -17,7 +17,7 @@ The first real-world implementations are scheduled to launch in 2024.
 
 ## Getting started as a provider
 AF is an open standard, therefore any provider interested offering AssetFetch can do so by implementing the HTTP-endpoints defined in the specification.
-A more detailed implementation guide for providers is planned for the future.
+A more detailed implementation guide for providers is [available here](./for-providers.md).
 
 ## Getting started as a client developer
 In the same way that anyone can become an AssetFetch provider anyone is also able to develop a client, either as a standalone application or as a plugin for an existing one.

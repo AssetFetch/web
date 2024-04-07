@@ -6,7 +6,7 @@ That's a great choice!
 This article is a general high-level guide to setting up all the required API-endpoints for AssetFetch on your website.
 It isn't a programming tutorial and it likely won't replace [reading the full specification](./latest-draft.md) but it will give you an easy-to-follow and mostly technology-neutral overview on what questions you need to ask yourself and what you need to implement.
 
-## General Overview
+## General overview
 
 As a provider, the implementation of AF is done by offering a handful of HTTP endpoints with a specific, JSON-based format.
 
@@ -227,7 +227,8 @@ Its output is the longest and most detailed, because it describes the way that t
 						"file_info": {
 							"local_path": "green_apple_001.fbx",
 							"length": 39086,
-							"extension": ".fbx"
+							"extension": ".fbx",
+							"behavior": "file_active"
 						},
 						"loose_material_apply": {
 							"material_name": "green_apple_001_mat"
@@ -245,7 +246,8 @@ Its output is the longest and most detailed, because it describes the way that t
 						"file_info": {
 							"local_path": "green_apple_001_albedo_2048.png",
 							"length": 2364589,
-							"extension": ".png"
+							"extension": ".png",
+							"behavior": "file_passive"
 						},
 						"loose_material_define": {
 							"material_name": "green_apple_001_mat",
@@ -265,7 +267,8 @@ Its output is the longest and most detailed, because it describes the way that t
 						"file_info": {
 							"local_path": "green_apple_001_normal_2048.png",
 							"length": 2364589,
-							"extension": ".png"
+							"extension": ".png",
+							"behavior": "file_passive"
 						},
 						"loose_material_define": {
 							"material_name": "green_apple_001_mat",
@@ -285,7 +288,8 @@ Its output is the longest and most detailed, because it describes the way that t
 						"file_info": {
 							"local_path": "green_apple_001_roughness_2048.png",
 							"length": 2364589,
-							"extension": ".png"
+							"extension": ".png",
+							"behavior": "file_passive"
 						},
 						"loose_material_define": {
 							"material_name": "green_apple_001_mat",
@@ -316,7 +320,8 @@ Its output is the longest and most detailed, because it describes the way that t
 						"file_info": {
 							"local_path": "green_apple_001_2048.usdz",
 							"length": 39000860,
-							"extension": ".usdz"
+							"extension": ".usdz",
+							"behavior": "file_active"
 						}
 					}
 				}
@@ -342,7 +347,8 @@ Its output is the longest and most detailed, because it describes the way that t
 						"file_info": {
 							"local_path": "green_apple_001_2048.blend",
 							"length": 30908600,
-							"extension": ".blend"
+							"extension": ".blend",
+							"behavior": "file_active"
 						},
 						"format.blend": {
 							"version": "4",
@@ -415,3 +421,114 @@ Since these values (mainly the balance) may change as the user downloads assets,
 !!! note "Purchasing vs. Unlocking"
 	Instead of "buying" or "purchasing", AssetFetch uses the more generic term "unlocking" since there are some use-cases where assets are "unlocked" without an actual purchase specifically for this asset, for example in a subscription model that offers a fixed number of asset downloads per month.
 
+Unlocking functionality requires two additional endpoints: One for performing the "unlocking"/purchase itself and one for receiving the download information for resources after they have been unlocked.
+Along with this come two specific datablocks: `unlock_queries` and `unlock_link`.
+
+Let's look at an example:
+
+```json
+{
+  "meta": {
+    "kind": "implementation_list",
+    "message": "OK",
+    "version": "0.2"
+  },
+  "data": {
+    "unlock_queries": [
+      {
+        "id": "green_apple_001",
+        "unlocked": false,
+        "price": 1,
+        "unlock_query": {
+          "uri": "https://api.example.com/af/0.2/unlock",
+          "method": "post",
+          "payload": {
+            "id": "green_apple_001"
+          }
+        },
+        "unlock_query_fallback_uri": "https://example.com/view-item/green_apple_001"
+      }
+    ]
+  },
+  "implementations": [
+    ...
+  ]
+}
+```
+
+The `unlock_queries` datablock gets attached to the implementation list itself. It contains information about one or multiple (in this case just one) concrete purchases that the user can make.
+In this example the green apple asset is represented as just one purchasable item which includes all possible variations (You either own the green apple or you don't, we will get to more complicated scenarios later).
+
+Every component which needs to be purchased then gets an `unlock_link` datablock instead of a `file_fetch.*` datablock attached to it, which contains a fixed query (`unlocked_datablocks_query`) to another endpoint.
+This example only shows the USDZ version of the asset, for brevity:
+
+```json
+{
+  "implementations": [
+    {
+      "id": "green_apple_001.usdz",
+      "data": {
+        "unlock_link": {
+          "unlock_query_id": "green_apple_001",
+          "unlocked_datablocks_query": {
+            "uri": "https://api.example.com/af/0.2/unlocked_datablocks",
+            "method": "get",
+            "payload": {
+              "component": "green_apple_001_2048.usdz"
+            }
+          }
+        },
+        "file_info": {
+          "local_path": "green_apple_001_2048.usdz",
+          "length": 39000860,
+          "extension": ".usdz"
+        }
+      }
+    }
+  ]
+}
+
+```
+
+This tells the client that it needs to:
+
+1. Perform the unlock query for `green_apple_001`, if it hasn't already been made (based on the `unlocked` field)
+2. Contact the `unlocked_datablocks` endpoint which prompts the provider to look check in the database if the logged in user is really allowed to get this file (which should be the case at this point) and then return the **real** download link in form of the `file_fetch.download` datablock that would normally be included directly on the implementation list. This dynamically generated download data can be temporally limited, if the provider wants it to be:
+
+```json
+{
+	"meta": {
+		"kind": "unlocked_datablocks",
+		"message": "OK",
+		"version": "0.2"
+	},
+	"data": {
+		"file_fetch.download": {
+			"uri": "https://secure-cdn.example.com/assets/green_apple_001/green_apple_001_2048.usdz",
+			"method": "get",
+			"payload": {
+				"temp-token": "6f6250b8f52197f47094f71ee984725c31446a1"
+			}
+		}
+	}
+}
+```
+
+The client then repeats the same procedure for all the components that it needs to download.
+
+Thie above example assumes that the green apple asset is sold as one unit which includes all variations.
+Therefore, all components in all implementations would point to the same unlocking query in the `unlock_queries` datablock.
+However, some providers like to offer customers the opportunity to make purchases with a higher granularity, like [Textures.com, where every resolution of every material map is an individual purchase](https://www.textures.com/download/3DScans0412/133019) which means that one asset can consist of dozens, sometimes nearly 100 individual purchases a user could make.
+A purchase of one asset from a provider like this could be represented by the provider as just one unlocking query which then unlocks all relevant files in the background, but AssetFetch also allows those providers to expose this information by sending multiple unlocking queries which then get individually linked to specific components in their `unlock_link` datablock.
+This way, the client is able to show the user _exactly_ how the purchase they are about to make is composed which becomes even more important if the user already owns some parts of the asset they are about to import, for example because they already bought the color and normal map, but not the roughness and ambient occlusion maps.
+In this case, the provider would still send the full list of unlocking queries, but mark some of them as `unlocked=true` from the start to indicate that the purchase behind this query has already been made and that the client can immediately proceed to fetching the unlocked datablocks that reference this unlocked query (though the final `file_fetch.download` datablock still needs to be pulled through a separate call because the provider may still choose to use temporary download links).
+
+## Not (yet) covered by this guide...
+
+This guide already covers many of the most important aspects of AssetFetch, but there are a few more concepts that are not (yet) covered here:
+
+- Component behavior, which indicates whether a client should try to directly import a specific file or just download it because it is needed as a dependency by other files
+- Archive handling which AssetFetch supports to enable providers to host only one set of files for both normal web-users (who prefer to download everything in one go) and AF-users. Components can reference other components as their containers which instructs the client to unpack them upon downloading
+- Format-specific import instructions which can tell the client details specific to a particular file type, like whether an OBJ file should be read as Y-up or Z-up or whether a BLEND file is marked as an asset for use in Blender's internal asset library system, which would allow the client to handle that file differently.
+- Pagination, which is only mentioned briefly.
+- ...
