@@ -185,3 +185,233 @@ All the truly interesting data is in the `assets` array, which in this case has 
 
 An asset consists of just an `id` and a collection of datablocks.
 The most important datablock is the `implementation_list_query` which is another variable query, but this one is specifically to get the implementations of THIS asset.
+The fact that every asset has its own variable query for getting its implementations gives providers great flexibility in how they allow users to configure their assets.
+Features like a LOD- or resolution selection (as shown in the example) can of course be implemented using this query, but also more advanced features like dynamically selecting which PBR maps should be included in a material the first place or even variable resolutions per map with thousands of possible implementations can be represented.
+
+Beyond the implementation list query every asset comes with other datablocks such as names or thumbnail data (including optional variable resolution support for different display sizes).
+More datablocks with information about authors or licensing are also available.
+
+When the artist has chosen an asset from the list and provided the requested quality choices for the asset, the client can query the provider for the actual implementation list.
+
+## Getting implementations
+
+The previous endpoint (`asset_list`) did not return any information about the actual files related to the asset, this is the job of the `implementation_list` endpoint that gets called by the client using the data provided during the previous step.
+Its output is the longest and most detailed, because it describes the way that the asset with all the selected quality parameters can be imported.
+
+```json
+{
+	"meta": {
+		"kind": "implementation_list",
+		"message": "OK",
+		"version": "0.2"
+	},
+	"data": {},
+	"implementations": [
+		{
+			"id": "2048_FBX",
+			"data": {
+				"text": {
+					"title": "FBX (loose material)",
+					"description": "The model delivered as an FBX file with separate PBR maps with 2048px resolution."
+				}
+			},
+			"components": [
+				{
+					"id": "green_apple_001.fbx",
+					"data": {
+						"file_fetch.download": {
+							"uri": "https://cdn.example.com/assets/green_apple_001/green_apple_001.fbx",
+							"method": "get",
+							"payload": {}
+						},
+						"file_info": {
+							"local_path": "green_apple_001.fbx",
+							"length": 39086,
+							"extension": ".fbx"
+						},
+						"loose_material_apply": {
+							"material_name": "green_apple_001_mat"
+						}
+					}
+				},
+				{
+					"id": "green_apple_001_albedo_2048.png",
+					"data": {
+						"file_fetch.download": {
+							"uri": "https://cdn.example.com/assets/green_apple_001/green_apple_001_albedo_2048.png",
+							"method": "get",
+							"payload": {}
+						},
+						"file_info": {
+							"local_path": "green_apple_001_albedo_2048.png",
+							"length": 2364589,
+							"extension": ".png"
+						},
+						"loose_material_define": {
+							"material_name": "green_apple_001_mat",
+							"map": "albedo",
+							"colorspace": "srgb"
+						}
+					}
+				},
+				{
+					"id": "green_apple_001_normal_2048.png",
+					"data": {
+						"file_fetch.download": {
+							"uri": "https://cdn.example.com/assets/green_apple_001/green_apple_001_normal_2048.png",
+							"method": "get",
+							"payload": {}
+						},
+						"file_info": {
+							"local_path": "green_apple_001_normal_2048.png",
+							"length": 2364589,
+							"extension": ".png"
+						},
+						"loose_material_define": {
+							"material_name": "green_apple_001_mat",
+							"map": "normal+y",
+							"colorspace": "linear"
+						}
+					}
+				},
+				{
+					"id": "green_apple_001_roughness_2048.png",
+					"data": {
+						"file_fetch.download": {
+							"uri": "https://cdn.example.com/assets/green_apple_001/green_apple_001_roughness_2048.png",
+							"method": "get",
+							"payload": {}
+						},
+						"file_info": {
+							"local_path": "green_apple_001_roughness_2048.png",
+							"length": 2364589,
+							"extension": ".png"
+						},
+						"loose_material_define": {
+							"material_name": "green_apple_001_mat",
+							"map": "roughness",
+							"colorspace": "linear"
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": "2048_USDZ",
+			"data": {
+				"text": {
+					"title": "USDZ",
+					"description": "The model delivered as a single packed USDZ file with 2048px textures."
+				}
+			},
+			"components": [
+				{
+					"id": "green_apple_001_2048.usdz",
+					"data": {
+						"file_fetch.download": {
+							"uri": "https://cdn.example.com/assets/green_apple_001/green_apple_001_2048.usdz",
+							"method": "get",
+							"payload": {}
+						},
+						"file_info": {
+							"local_path": "green_apple_001_2048.usdz",
+							"length": 39000860,
+							"extension": ".usdz"
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": "2048_BLEND",
+			"data": {
+				"text": {
+					"title": "Blender",
+					"description": "The model delivered as a single packed .blend file with 2048px textures."
+				}
+			},
+			"components": [
+				{
+					"id": "green_apple_001_2048.blend",
+					"data": {
+						"file_fetch.download": {
+							"uri": "https://cdn.example.com/assets/green_apple_001/green_apple_001_2048.blend",
+							"method": "get",
+							"payload": {}
+						},
+						"file_info": {
+							"local_path": "green_apple_001_2048.blend",
+							"length": 30908600,
+							"extension": ".blend"
+						},
+						"format.blend": {
+							"version": "4",
+							"is_asset": true
+						}
+					}
+				}
+			]
+		}
+	]
+}
+```
+
+This implementation list is essentially a list suggestions for how the asset could be downloaded and imported, because not every 3D software supports every general-purpose 3D file format (and most of them have their own special format that is readable only to them).
+
+In this example, the provider offers the same model with the same quality (2048px textures, which is the only variable here) in three different ways (implementations):
+
+- As an FBX file with separate textures
+- As a packed USDZ file
+- As a packed BLEND file
+
+It is then up to the client to pick one of these three implementations that it believes it will be able to handle.
+The client makes this decision based on the data in the `file_info` datablock and other datablocks (This will be covered in greater detail in the client guide).
+It can also simply ask the user to make an implementation choice, especially if multiple implementations turn out to be theoretically viable.
+
+From this list the client is able to generate an "import plan", basically a series of steps to download the files and load them into the current scene or some own internal asset database.
+
+For an open asset library with no authentication and no "asset unlocking" functionality this is already everything that needs to be implemented.
+Let's now return to the more advanced use cases.
+
+## Authentication
+
+Authentication is handled via custom headers that the provider can request, which gives them great flexibility to implement an authentication system that fits their need.
+The data about required headers is included in the `initialization` endpoint (which, remember, must be openly accessible without any authentication).
+When reading the `provider_configuration` datablock during initialization, the client knows that it must collect the requested values from the user before it can continue making requests to any of the other endpoints.
+
+```json
+{
+	"data": {
+		"provider_configuration": {
+			"headers": [
+				{
+					"name": "access-token",
+					"is_required": true,
+					"is_sensitive": true,
+					"title": "Access Token",
+					"acquisition_uri": "https://example.com/help/how-to-get-af-token",
+					"acquisition_uri_title": "Learn how to get your access token and paste it here."
+				}
+			],
+			"connection_status_query": {
+				"uri": "https://api.example.com/af/0.2/connection_status",
+				"method": "get",
+				"payload": {}
+			}
+		}
+	}
+}
+```
+
+Part of the `provider_configuration` endpoint is also a fixed query to a `connection_status` endpoint which serves two functions:
+
+- It is the dedicated endpoint for the client to "try out" the header values entered by the user in order to get confirmation that they are correct.
+- If successful, it returns profile data about the user that the provider already has in its database, for example the username, subscription tier or account balance.
+
+Since these values (mainly the balance) may change as the user downloads assets, the client re-calls this endpoint after every asset import to get up-to-date data.
+
+## Purchasing ("Unlocking") assets
+
+!!! note "Purchasing vs. Unlocking"
+	Instead of "buying" or "purchasing", AssetFetch uses the more generic term "unlocking" since there are some use-cases where assets are "unlocked" without an actual purchase specifically for this asset, for example in a subscription model that offers a fixed number of asset downloads per month.
+
