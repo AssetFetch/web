@@ -13,7 +13,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - toc:
       permalink: true
-      toc_depth: 3
+      toc_depth: 0
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -34,7 +34,6 @@ theme:
   logo: media/icon_cube.svg
   favicon: media/icon_cube.svg
   features:
-    - toc.follow
     - navigation.footer
   icon:
     repo: fontawesome/brands/github
@@ -46,7 +45,8 @@ nav:
   #- "For Client Developers": for-client-devs.md
   - "Specification": 
     - "Latest Draft": latest-draft.md
-    - "v0.2": spec-0.2.md
-    - "v0.1": spec-0.1.md
+    - v0.2: spec/0.2.md
+    - v0.1: spec/0.1.md
+    
 extra_css:
   - stylesheets/theme.css
