@@ -46,7 +46,9 @@ nav:
   #- "For Client Developers": for-client-devs.md
   - "Specification": 
     - "Latest Draft": latest-draft.md
-    - "v0.2": spec-0.2.md
-    - "v0.1": spec-0.1.md
+    - v0.3: spec/0.3.md
+    - v0.2: spec/0.2.md
+    - v0.1: spec/0.1.md
+    
 extra_css:
   - stylesheets/theme.css
