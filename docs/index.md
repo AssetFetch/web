@@ -13,13 +13,15 @@ This way, **artists** can use a single AssetFetch-Plugin per application to brow
 
 !!! note "Project Status"
 	AssetFetch is currently in the early stages of development, meaning that the specification itself is still subject to changes and improvements.
-	Version 0.1 was released in February 2024 with version 0.2 scheduled for release this summer.
+	Version 0.1 was released in February 2024, the latest version (0.3) was released in April.
+
+	The plan is to release version 1.0 of the specification at some point in 2024.
 
 	**Plugins:**
-	A blender client plugin is in development and will be released later this summer.
+	A blender client plugin is in development with [pre-release versions available via GitHub](https://github.com/struffel/assetfetch-blender).
 
 	**Providers:**
-	An AssetFetch endpoint will be added to [ambientCG.com](https://ambientCG.com) later this summer.
+	At this point, only ambientCG is offering an AssetFetch endpoint via the url [`https://ambientcg.com/api/af/init`](https://ambientcg.com/api/af/init).
 
 	**Spec Updates:**
 	Read the [latest draft version](./latest-draft.md) and [check the open issues on GitHub](https://github.com/AssetFetch/spec/blob/main/spec.md) to see the latest changes and updates
