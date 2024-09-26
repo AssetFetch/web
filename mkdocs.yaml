@@ -22,9 +22,6 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
 
-
-
-
 repo_url: https://github.com/AssetFetch/web
 repo_name: AssetFetch/web
 theme:
@@ -40,14 +37,14 @@ theme:
 nav:
   - "Start": index.md
   - "How It Works": "how-it-works.md"
-  #- "For Artists": for-artists.md
+  - "For Artists": for-artists.md
   - "For Providers": for-providers.md
   #- "For Client Developers": for-client-devs.md
-  - "Specification": 
-    - "Latest Draft": latest-draft.md
-    - v0.3: spec/0.3.md
-    - v0.2: spec/0.2.md
-    - v0.1: spec/0.1.md
-    
+  - "Specification":
+      - "Latest Draft": spec/latest-draft.md
+      - v0.3: spec/0.3.md
+      - v0.2: spec/0.2.md
+      - v0.1: spec/0.1.md
+
 extra_css:
   - stylesheets/theme.css
