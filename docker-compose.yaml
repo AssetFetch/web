@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   get-spec:
-    image: curlimages/curl:latest
+    image: alpine
     entrypoint: /bin/sh
     command: /docs/get-spec.sh
     volumes:
