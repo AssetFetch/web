@@ -1,12 +1,21 @@
 version: '3.8'
 
 services:
+  get-spec:
+    image: curlimages/curl:latest
+    entrypoint: /bin/sh
+    command: /docs/get-spec.sh
+    volumes:
+      - ./:/docs
+    working_dir: /docs
   mkdocs:
+    depends_on:
+      get-spec:
+        condition: service_completed_successfully
     image: squidfunk/mkdocs-material:9.5.38
     command: ${AF_MKDOCS_COMMAND} # For normal development this variable can simply be empty, but during deployment this gets set to "build"
     volumes:
       - ./:/docs
-      - ../spec/spec.md:/docs/docs/spec/latest-draft.md
     working_dir: /docs
     ports:
       - 8000:8000

@@ -4,7 +4,7 @@ If you are reading this, then you are the owner/developer of a website or simila
 That's a great choice!
 
 This article is a general high-level guide to setting up all the required API-endpoints for AssetFetch on your website.
-It isn't a programming tutorial and it likely won't replace [reading the full specification](./spec/latest-draft.md) but it will give you an easy-to-follow and mostly technology-neutral overview on what questions you need to ask yourself and what you need to implement.
+It isn't a programming tutorial and it likely won't replace [reading the full specification](./spec/heads/main.md) but it will give you an easy-to-follow and mostly technology-neutral overview on what questions you need to ask yourself and what you need to implement.
 
 ## General overview
 

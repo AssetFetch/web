@@ -41,10 +41,10 @@ nav:
   - "For Providers": for-providers.md
   #- "For Client Developers": for-client-devs.md
   - "Specification":
-      - "Latest Draft": spec/latest-draft.md
-      - v0.3: spec/0.3.md
-      - v0.2: spec/0.2.md
-      - v0.1: spec/0.1.md
+      - "Latest Draft": spec/heads/main.md
+      - v0.3: spec/tags/0.3.md
+      - v0.2: spec/tags/0.2.md
+      - v0.1: spec/tags/0.1.md
 
 extra_css:
   - stylesheets/theme.css
