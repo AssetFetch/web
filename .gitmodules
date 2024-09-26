@@ -1,1 +1,5 @@
 
+[submodule "spec"]
+	path = spec
+	url = https://github.com/AssetFetch/spec
+	branch = main
