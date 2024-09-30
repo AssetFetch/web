@@ -42,6 +42,7 @@ nav:
   #- "For Client Developers": for-client-devs.md
   - "Specification":
       - "Latest Draft": spec/heads/main.md
+      - v0.4: spec/tags/0.4.md
       - v0.3: spec/tags/0.3.md
       - v0.2: spec/tags/0.2.md
       - v0.1: spec/tags/0.1.md
