@@ -13,9 +13,9 @@ This way, **artists** can use a single AssetFetch-Plugin per application to brow
 
 !!! note "Project Status"
 	AssetFetch is currently in the early stages of development, meaning that the specification itself is still subject to changes and improvements.
-	Version 0.1 was released in February 2024, the latest version (0.3) was released in April.
+	Version 0.1 was released in February 2024, the latest version (0.4) was released in September.
 
-	The plan is to release version 1.0 of the specification at some point in 2024.
+	The plan is to release version 1.0 of the specification at some point in late 2024 or early 2025.
 
 	**Plugins:**
 	A blender client plugin is in development with [pre-release versions available via GitHub](https://github.com/struffel/assetfetch-blender).
