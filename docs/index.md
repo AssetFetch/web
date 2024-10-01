@@ -18,7 +18,7 @@ This way, **artists** can use a single AssetFetch-Plugin per application to brow
 	The plan is to release version 1.0 of the specification at some point in late 2024 or early 2025.
 
 	**Plugins:**
-	A blender client plugin is in development with [pre-release versions available via GitHub](https://github.com/struffel/assetfetch-blender).
+	A blender client plugin is in development with [pre-release versions available via GitHub](https://github.com/AssetFetch/blender).
 
 	**Providers:**
 	At this point, only ambientCG is offering an AssetFetch endpoint via the url [`https://ambientcg.com/api/af/init`](https://ambientcg.com/api/af/init).
