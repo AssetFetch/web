@@ -37,7 +37,8 @@ theme:
 nav:
   - "Start": index.md
   - "How It Works": "how-it-works.md"
-  - "For Artists": for-artists.md
+  - "For Artists": 
+    - "Blender": for-artists/blender.md
   - "For Providers": for-providers.md
   #- "For Client Developers": for-client-devs.md
   - "Specification":
